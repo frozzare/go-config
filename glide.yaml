@@ -1,4 +1,4 @@
-package: github.com/frozzare/go-configure
+package: github.com/frozzare/go-config
 import: []
 testImport:
 - package: github.com/frozzare/go-assert
