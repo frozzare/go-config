@@ -1,0 +1,6 @@
+hash: a5b049ba200665c99cc88d183e42c5748b447bfd9fd6155006a3dd25b7f902e7
+updated: 2017-01-19T09:18:12.939412563+01:00
+imports: []
+testImports:
+- name: github.com/frozzare/go-assert
+  version: d8c1f30419398e1e8d999b385ac25bb2b2cb3dee

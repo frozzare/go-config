@@ -1,0 +1,5 @@
+package: github.com/frozzare/go-configure
+import: []
+testImport:
+- package: github.com/frozzare/go-assert
+  version: ^1.0.1
