@@ -1,0 +1,26 @@
+{
+    "name": "fredrik",
+    "names": [
+        "fredrik",
+        "elli"
+    ],
+    "user": {
+        "name": "frozzare",
+        "info": {
+            "name": "fredrik",
+            "level": {
+                "name": "elli",
+                "level2": {
+                    "name": "frozzare"
+                }
+            }
+        }
+    },
+    "float": 12.13,
+    "int": 12,
+    "uint": 1,
+    "bool": true,
+    "object": {
+        "name": "fredrik"
+    }
+}
