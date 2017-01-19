@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 // Values are a config middleware that can
@@ -130,14 +129,13 @@ func (s *Values) List(key string) ([]string, error) {
 	}
 
 	if x, ok := v.(string); ok {
-		x = strings.Map(func(r rune) rune {
-			if unicode.IsSpace(r) {
-				return -1
-			}
-			return r
-		}, x)
+		l := strings.Split(x, ",")
 
-		return strings.Split(x, ","), nil
+		for i, p := range l {
+			l[i] = strings.TrimSpace(p)
+		}
+
+		return l, nil
 	}
 
 	switch v.(type) {
