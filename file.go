@@ -1,17 +1,21 @@
 package config
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
 	"os"
 	"strings"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 type fileType int
 
 const (
 	jsonType fileType = iota + 1
+	yamlType
 	naType
 )
 
@@ -26,6 +30,10 @@ type File struct {
 func fileTypeFromPath(path string) fileType {
 	if strings.HasSuffix(path, ".json") {
 		return jsonType
+	}
+
+	if strings.HasSuffix(path, ".yml") || strings.HasPrefix(path, ".yaml") {
+		return yamlType
 	}
 
 	return naType
@@ -64,6 +72,10 @@ func (s *File) Setup() error {
 	switch s.typ {
 	case jsonType:
 		return json.NewDecoder(r).Decode(&s.values)
+	case yamlType:
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(r)
+		return yaml.Unmarshal(buf.Bytes(), &s.values)
 	}
 
 	return nil

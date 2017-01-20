@@ -1,6 +1,8 @@
-hash: a5b049ba200665c99cc88d183e42c5748b447bfd9fd6155006a3dd25b7f902e7
-updated: 2017-01-19T09:18:12.939412563+01:00
-imports: []
+hash: 7a538562263176f6904c56f3cef50cb50e0efdf9fa85da21fefc1f4ed08a5189
+updated: 2017-01-19T09:41:48.805353184+01:00
+imports:
+- name: gopkg.in/yaml.v2
+  version: bef53efd0c76e49e6de55ead051f886bea7e9420
 testImports:
 - name: github.com/frozzare/go-assert
   version: d8c1f30419398e1e8d999b385ac25bb2b2cb3dee
