@@ -1,6 +1,12 @@
 hash: 7a538562263176f6904c56f3cef50cb50e0efdf9fa85da21fefc1f4ed08a5189
-updated: 2017-01-19T09:41:48.805353184+01:00
+updated: 2017-01-23T22:01:06.782655793+01:00
 imports:
+- name: github.com/fsnotify/fsnotify
+  version: fd9ec7deca8bf46ecd2a795baaacf2b3a9be1197
+- name: golang.org/x/sys
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  subpackages:
+  - unix
 - name: gopkg.in/yaml.v2
   version: bef53efd0c76e49e6de55ead051f886bea7e9420
 testImports:

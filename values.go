@@ -10,6 +10,7 @@ import (
 // Values are a config middleware that can
 // handle different type of values.
 type Values struct {
+	id     string
 	err    error
 	values map[string]interface{}
 }
@@ -34,6 +35,11 @@ func (s *Values) Set(key string, value interface{}) {
 	}
 
 	s.values[key] = value
+}
+
+// ID returns the values struct identifier.
+func (s *Values) ID() string {
+	return s.id
 }
 
 // Bool returns a bool from the values map or a error.

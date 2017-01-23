@@ -51,19 +51,32 @@ func (c *Config) Middlewares() []Middleware {
 func Use(middleware ...Middleware) {
 	config.Lock()
 	defer config.Unlock()
-	config.middlewares = append(config.middlewares, middleware...)
-}
 
-func init() {
-	for _, middleware := range config.Middlewares() {
+	// Replace old middleware with a new one if the has the same id.
+	for i, m1 := range config.middlewares {
+		for _, m2 := range middleware {
+			if m1.ID() == m2.ID() {
+				config.middlewares = append(config.middlewares[:i], config.middlewares[i+1:]...)
+			}
+		}
+	}
+
+	config.middlewares = append(config.middlewares, middleware...)
+
+	// Stop program if a middleware failes to setup.
+	for _, middleware := range config.middlewares {
 		err := middleware.Setup()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Forced to abort because %T is failing to setup: %v\n", middleware, err)
 			os.Exit(1)
 		}
 	}
+
+	// Be sure to reset config data since we adds a new middleware.
+	config.data = make(map[interface{}]interface{})
 }
 
+// value loops through all middlewares to find the first value by key from a middleware.
 func (c *Config) value(key string, typ valueType) (interface{}, error) {
 	var value interface{}
 	var err error
@@ -136,6 +149,10 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 			}
 
 			value = o
+			break
+		}
+
+		if value != nil {
 			break
 		}
 	}

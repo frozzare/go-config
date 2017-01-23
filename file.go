@@ -4,9 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log"
 	"os"
 	"strings"
 	"sync"
+
+	"bytes"
+
+	"github.com/fsnotify/fsnotify"
 )
 
 // File struct is a config file.
@@ -23,23 +28,6 @@ var (
 	fileTypesMu sync.RWMutex
 	fileTypes   = make(map[string]fileCallback)
 )
-
-// RegisterFileType register a file type with a callback.
-func RegisterFileType(ext string, callback fileCallback) {
-	fileTypesMu.Lock()
-
-	defer fileTypesMu.Unlock()
-
-	if callback == nil {
-		panic("config: RegisterFileType callback is nil")
-	}
-
-	if _, dup := fileTypes[ext]; dup {
-		panic("config: RegisterFileType called twice for " + ext)
-	}
-
-	fileTypes[ext] = callback
-}
 
 // fileCallbackFromPath returns a callback for the file type or nil.
 func fileCallbackFromPath(path string) fileCallback {
@@ -59,7 +47,7 @@ func fileCallbackFromPath(path string) fileCallback {
 }
 
 // NewFromFile creates a new middleware from file.
-func NewFromFile(path string) *Values {
+func NewFromFile(path string) Middleware {
 	file := &File{
 		gen: func() (io.Reader, error) {
 			return os.Open(path)
@@ -69,10 +57,78 @@ func NewFromFile(path string) *Values {
 
 	err := file.Setup()
 	if err != nil {
-		return &Values{err: err}
+		return &Values{err: err, id: path}
 	}
 
-	return &Values{values: file.values}
+	return &Values{values: file.values, id: path}
+}
+
+// NewFromBytes creates a new middleware from bytes as the given type, e.g: json.
+func NewFromBytes(typ string, body []byte) Middleware {
+	file := &File{
+		gen: func() (io.Reader, error) {
+			return bytes.NewReader(body), nil
+		},
+		callback: fileCallbackFromPath("." + typ),
+	}
+
+	err := file.Setup()
+	if err != nil {
+		return &Values{err: err, id: "bytes." + typ}
+	}
+
+	return &Values{values: file.values, id: "bytes." + typ}
+}
+
+// ReadAndWatchFile reads and watchs for changes in the configuration file.
+func ReadAndWatchFile(filePath string) error {
+	Use(NewFromFile(filePath))
+
+	go func() {
+		watcher, err := fsnotify.NewWatcher()
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer watcher.Close()
+
+		done := make(chan bool)
+		go func() {
+			for {
+				select {
+				case e := <-watcher.Events:
+					if e.Op&fsnotify.Write == fsnotify.Write {
+						Use(NewFromFile(filePath))
+					}
+				case <-watcher.Errors:
+				}
+			}
+		}()
+
+		err = watcher.Add(filePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		<-done
+	}()
+
+	return nil
+}
+
+// RegisterFileType register a file type with a callback.
+func RegisterFileType(ext string, callback fileCallback) {
+	fileTypesMu.Lock()
+
+	defer fileTypesMu.Unlock()
+
+	if callback == nil {
+		panic("config: RegisterFileType callback is nil")
+	}
+
+	if _, dup := fileTypes[ext]; dup {
+		panic("config: RegisterFileType called twice for " + ext)
+	}
+
+	fileTypes[ext] = callback
 }
 
 // Setup returns a error if the middleware setup is failing.
