@@ -17,7 +17,7 @@ func main() {
 	config.Use(config.NewFromFile("config.yml"))
 	config.Use(config.NewEnv())
 
-	// Read and watch config.
+	// Read and watch config (replaces first middleware since it's the same file path).
 	if err := config.ReadAndWatchFile("config.yml"); err != nil {
 		log.Fatal(err)
 	}
