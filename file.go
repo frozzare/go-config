@@ -1,42 +1,61 @@
 package config
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
 	"os"
 	"strings"
-
-	"gopkg.in/yaml.v2"
-)
-
-type fileType int
-
-const (
-	jsonType fileType = iota + 1
-	yamlType
-	naType
+	"sync"
 )
 
 // File struct is a config file.
 type File struct {
-	gen    func() (io.Reader, error)
-	typ    fileType
-	values map[string]interface{}
+	gen      func() (io.Reader, error)
+	callback fileCallback
+	values   map[string]interface{}
 }
 
-// fileTypeFromPath returns right file type for the file.
-func fileTypeFromPath(path string) fileType {
+// fileCallback is used as a callback type for RegisterFileType.
+type fileCallback func(input io.Reader, output *map[string]interface{}) error
+
+var (
+	fileTypesMu sync.RWMutex
+	fileTypes   = make(map[string]fileCallback)
+)
+
+// RegisterFileType register a file type with a callback.
+func RegisterFileType(ext string, callback fileCallback) {
+	fileTypesMu.Lock()
+
+	defer fileTypesMu.Unlock()
+
+	if callback == nil {
+		panic("store: RegisterFileType callback is nil")
+	}
+
+	if _, dup := fileTypes[ext]; dup {
+		panic("config: RegisterFileType called twice for " + ext)
+	}
+
+	fileTypes[ext] = callback
+}
+
+// fileCallbackFromPath returns a callback for the file type or nil.
+func fileCallbackFromPath(path string) fileCallback {
 	if strings.HasSuffix(path, ".json") {
-		return jsonType
+		return func(input io.Reader, output *map[string]interface{}) error {
+			return json.NewDecoder(input).Decode(&output)
+		}
 	}
 
-	if strings.HasSuffix(path, ".yml") || strings.HasPrefix(path, ".yaml") {
-		return yamlType
+	for ext, callback := range fileTypes {
+		if strings.HasSuffix(path, ext) {
+			return callback
+		}
 	}
 
-	return naType
+	return nil
 }
 
 // NewFromFile creates a new middleware from file.
@@ -45,7 +64,7 @@ func NewFromFile(path string) *Values {
 		gen: func() (io.Reader, error) {
 			return os.Open(path)
 		},
-		typ: fileTypeFromPath(path),
+		callback: fileCallbackFromPath(path),
 	}
 
 	err := file.Setup()
@@ -58,7 +77,7 @@ func NewFromFile(path string) *Values {
 
 // Setup returns a error if the middleware setup is failing.
 func (s *File) Setup() error {
-	if s.typ == naType {
+	if s.callback == nil {
 		return errors.New("File type is not implemented")
 	}
 
@@ -67,16 +86,13 @@ func (s *File) Setup() error {
 		return err
 	}
 
-	s.values = make(map[string]interface{})
+	var values map[string]interface{}
 
-	switch s.typ {
-	case jsonType:
-		return json.NewDecoder(r).Decode(&s.values)
-	case yamlType:
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(r)
-		return yaml.Unmarshal(buf.Bytes(), &s.values)
+	if err := s.callback(r, &values); err != nil {
+		return err
 	}
+
+	s.values = values
 
 	return nil
 }

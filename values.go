@@ -103,17 +103,21 @@ func (s *Values) Int(key string) (int, error) {
 		return o, nil
 	}
 
-	f, ok := v.(float64)
-	if !ok {
-		return 0, fmt.Errorf("unable to cast %T", v)
+	if f, ok := v.(float64); ok {
+		return int(f), nil
 	}
 
-	return int(f), nil
+	if f, ok := v.(int); ok {
+		return int(f), nil
+	}
+
+	return 0, fmt.Errorf("unable to cast %T", v)
 }
 
 // Get returns a interface from the values map or a error.
 func (s *Values) Get(key string) (interface{}, error) {
 	v, err := value(key, s.values)
+
 	if err != nil {
 		return 0, err
 	}
@@ -185,10 +189,13 @@ func (s *Values) Uint(key string) (uint, error) {
 		return uint(o), nil
 	}
 
-	f, ok := v.(float64)
-	if !ok {
-		return 0, fmt.Errorf("unable to cast %T", v)
+	if f, ok := v.(float64); ok {
+		return uint(f), nil
 	}
 
-	return uint(f), nil
+	if f, ok := v.(int); ok {
+		return uint(f), nil
+	}
+
+	return 0, fmt.Errorf("unable to cast %T", v)
 }

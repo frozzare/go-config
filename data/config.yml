@@ -1,11 +1,10 @@
-yaml:
+name: fredrik
+names:
+    - fredrik
+    - elli
+float: 12.13
+int: 12
+uint: 1
+bool: true
+object:
     name: fredrik
-    names:
-        - fredrik
-        - elli
-    float: 12.13
-    int: 12
-    uint: 1
-    bool: true
-    object:
-        name: fredrik
