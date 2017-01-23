@@ -31,7 +31,7 @@ func RegisterFileType(ext string, callback fileCallback) {
 	defer fileTypesMu.Unlock()
 
 	if callback == nil {
-		panic("store: RegisterFileType callback is nil")
+		panic("config: RegisterFileType callback is nil")
 	}
 
 	if _, dup := fileTypes[ext]; dup {
