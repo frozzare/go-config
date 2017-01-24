@@ -53,10 +53,11 @@ func Use(middleware ...Middleware) {
 	defer config.Unlock()
 
 	// Replace old middleware with a new one if the has the same id.
-	for i, m1 := range config.middlewares {
-		for _, m2 := range middleware {
+	for i1, m1 := range config.middlewares {
+		for i2, m2 := range middleware {
 			if m1.ID() == m2.ID() {
-				config.middlewares = append(config.middlewares[:i], config.middlewares[i+1:]...)
+				config.middlewares[i1] = m2
+				middleware = append(middleware[:i2], middleware[i2+1:]...)
 			}
 		}
 	}
