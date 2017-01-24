@@ -16,7 +16,7 @@ func main() {
 	config.Use(config.NewFromFile("config.yml"))
 	config.Use(config.NewEnv())
 
-	// Read and watch config (replaces first middleware since it's the same file path).
+	// Watch config (replaces first middleware since it's the same file path).
 	config.WatchFile("config.yml")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
