@@ -12,7 +12,7 @@ import (
 // Example file
 
 func main() {
-	// Use file + env as a middlewares.
+	// Use file + env as middlewares.
 	config.Use(config.NewFromFile("config.yml"))
 	config.Use(config.NewEnv())
 
