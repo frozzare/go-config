@@ -80,10 +80,14 @@ func NewFromBytes(typ string, body []byte) Middleware {
 	return &Values{values: file.values, id: "bytes." + typ}
 }
 
-// ReadAndWatchFile reads and watchs for changes in the configuration file.
-func ReadAndWatchFile(filePath string) error {
-	Use(NewFromFile(filePath))
+// ReadAndWatchFile reads and watches file for changes and reload the configuration file.
+func ReadAndWatchFile(path string) {
+	Use(NewFromFile(path))
+	WatchFile(path)
+}
 
+// WatchFile watches file for changes and reload the configuration file.
+func WatchFile(path string) {
 	go func() {
 		watcher, err := fsnotify.NewWatcher()
 		if err != nil {
@@ -97,21 +101,19 @@ func ReadAndWatchFile(filePath string) error {
 				select {
 				case e := <-watcher.Events:
 					if e.Op&fsnotify.Write == fsnotify.Write {
-						Use(NewFromFile(filePath))
+						Use(NewFromFile(path))
 					}
 				case <-watcher.Errors:
 				}
 			}
 		}()
 
-		err = watcher.Add(filePath)
+		err = watcher.Add(path)
 		if err != nil {
 			log.Fatal(err)
 		}
 		<-done
 	}()
-
-	return nil
 }
 
 // RegisterFileType register a file type with a callback.

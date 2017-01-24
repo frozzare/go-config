@@ -2,7 +2,6 @@ package main
 
 import (
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/frozzare/go-config"
@@ -18,9 +17,7 @@ func main() {
 	config.Use(config.NewEnv())
 
 	// Read and watch config (replaces first middleware since it's the same file path).
-	if err := config.ReadAndWatchFile("config.yml"); err != nil {
-		log.Fatal(err)
-	}
+	config.WatchFile("config.yml")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		v, _ := config.String("name")
