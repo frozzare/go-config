@@ -16,8 +16,9 @@ import (
 
 // File struct is a config file.
 type File struct {
-	gen      func() (io.Reader, error)
 	callback fileCallback
+	gen      func() (io.Reader, error)
+	path     string
 	values   map[string]interface{}
 }
 
@@ -49,35 +50,37 @@ func fileCallbackFromPath(path string) fileCallback {
 // NewFromFile creates a new middleware from file.
 func NewFromFile(path string) Middleware {
 	file := &File{
+		callback: fileCallbackFromPath(path),
 		gen: func() (io.Reader, error) {
 			return os.Open(path)
 		},
-		callback: fileCallbackFromPath(path),
+		path: path,
 	}
 
 	err := file.Setup()
 	if err != nil {
-		return &Values{err: err, id: path}
+		return nil
 	}
 
-	return &Values{values: file.values, id: path}
+	return file
 }
 
 // NewFromBytes creates a new middleware from bytes as the given type, e.g: json.
 func NewFromBytes(typ string, body []byte) Middleware {
 	file := &File{
+		callback: fileCallbackFromPath("." + typ),
 		gen: func() (io.Reader, error) {
 			return bytes.NewReader(body), nil
 		},
-		callback: fileCallbackFromPath("." + typ),
+		path: "bytes." + typ,
 	}
 
 	err := file.Setup()
 	if err != nil {
-		return &Values{err: err, id: "bytes." + typ}
+		return nil
 	}
 
-	return &Values{values: file.values, id: "bytes." + typ}
+	return file
 }
 
 // ReadAndWatchFile reads and watches file for changes and reload the configuration file.
@@ -153,4 +156,86 @@ func (s *File) Setup() error {
 	s.values = values
 
 	return nil
+}
+
+// Bool returns a bool or a error.
+func (s *File) Bool(key string) (bool, error) {
+	v, err := value(key, s.values)
+
+	if err != nil {
+		return false, err
+	}
+
+	return castBool(v)
+}
+
+// Float returns a float64 or a error.
+func (s *File) Float(key string) (float64, error) {
+	v, err := value(key, s.values)
+
+	if err != nil {
+		return 0.0, err
+	}
+
+	return castFloat(v)
+}
+
+// Int returns a int or a error.
+func (s *File) Int(key string) (int, error) {
+	v, err := value(key, s.values)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return castInt(v)
+}
+
+// Get returns a interface or a error.
+func (s *File) Get(key string) (interface{}, error) {
+	v, err := value(key, s.values)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return v, nil
+}
+
+// List returns a slice of strings or a error.
+func (s *File) List(key string) ([]string, error) {
+	v, err := value(key, s.values)
+
+	if err != nil {
+		return []string{}, err
+	}
+
+	return castList(v)
+}
+
+// String returns a string or a error.
+func (s *File) String(key string) (string, error) {
+	v, err := value(key, s.values)
+
+	if err != nil {
+		return "", err
+	}
+
+	return castString(v)
+}
+
+// Uint returns a unsigned int or a error.
+func (s *File) Uint(key string) (uint, error) {
+	v, err := value(key, s.values)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return castUint(v)
+}
+
+// ID returns the values struct identifier.
+func (s *File) ID() string {
+	return s.path
 }

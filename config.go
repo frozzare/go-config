@@ -65,8 +65,13 @@ func Use(middleware ...Middleware) {
 	config.middlewares = append(config.middlewares, middleware...)
 
 	// Stop program if a middleware failes to setup.
-	for _, middleware := range config.middlewares {
+	for i, middleware := range config.middlewares {
+		if middleware == nil {
+			config.middlewares = append(config.middlewares[:i], config.middlewares[i+1:]...)
+		}
+
 		err := middleware.Setup()
+
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Forced to abort because %T is failing to setup: %v\n", middleware, err)
 			os.Exit(1)

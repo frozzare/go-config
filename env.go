@@ -32,12 +32,6 @@ func (s *Env) value(name string) (string, error) {
 	return v, nil
 }
 
-func (s *Env) values(key string, value interface{}) *Values {
-	v := &Values{}
-	v.Set(key, value)
-	return v
-}
-
 // Bool returns a bool or a error.
 func (s *Env) Bool(key string) (bool, error) {
 	v, err := s.value(key)
@@ -46,7 +40,7 @@ func (s *Env) Bool(key string) (bool, error) {
 		return false, err
 	}
 
-	return s.values(key, v).Bool(key)
+	return castBool(v)
 }
 
 // Float returns a float64 or a error.
@@ -57,7 +51,7 @@ func (s *Env) Float(key string) (float64, error) {
 		return 0.0, err
 	}
 
-	return s.values(key, v).Float(key)
+	return castFloat(v)
 }
 
 // Int returns a int or a error.
@@ -68,7 +62,7 @@ func (s *Env) Int(key string) (int, error) {
 		return 0, err
 	}
 
-	return s.values(key, v).Int(key)
+	return castInt(v)
 }
 
 // Get returns a interface or a error.
@@ -79,7 +73,7 @@ func (s *Env) Get(key string) (interface{}, error) {
 		return nil, err
 	}
 
-	return s.values(key, v).Get(key)
+	return v, nil
 }
 
 // List returns a slice of strings or a error.
@@ -90,7 +84,7 @@ func (s *Env) List(key string) ([]string, error) {
 		return []string{}, err
 	}
 
-	return s.values(key, v).List(key)
+	return castList(v)
 }
 
 // String returns a string or a error.
@@ -101,7 +95,7 @@ func (s *Env) String(key string) (string, error) {
 		return "", err
 	}
 
-	return s.values(key, v).String(key)
+	return castString(v)
 }
 
 // Uint returns a unsigned int or a error.
@@ -112,7 +106,7 @@ func (s *Env) Uint(key string) (uint, error) {
 		return 0, err
 	}
 
-	return s.values(key, v).Uint(key)
+	return castUint(v)
 }
 
 // ID returns the values struct identifier.
