@@ -1,33 +1,29 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"io"
+	"net/http"
+
+	"github.com/frozzare/go-config"
+
+	_ "github.com/frozzare/go-config/plugins/yaml"
 )
 
-type entry struct {
-	value int
-	name  string
-}
-
-var v = []entry{
-	{0, "zero"},
-	{1, "one"},
-	{2, "two"},
-	{3, "three"},
-	{4, "four"},
-	{5, "five"},
-	{6, "six"},
-}
-
-func increase() {
-	for i := 0; i <= len(v); i++ {
-		v[i].value++
-	}
-}
+// Example file
 
 func main() {
-	fmt.Println(os.Args)
-	increase()
+	// Use file + env as middlewares.
+	config.Use(config.NewFromFile("config.yml"))
+	config.Use(config.NewEnv())
 
+	// Watch config (replaces first middleware since it's the same file path).
+	config.WatchFile("config.yml")
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		v, _ := config.String("name")
+		io.WriteString(w, v)
+	})
+
+	http.ListenAndServe(":8899", nil)
 }
+0
