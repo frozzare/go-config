@@ -7,57 +7,76 @@ import (
 	"github.com/frozzare/go-assert"
 )
 
-func init() {
+func setupEnvTest() {
 	Use(NewEnv())
 }
 
 func TestEnvBool(t *testing.T) {
-	os.Setenv("BOOLENV", "true")
-	v, err := Bool("boolenv")
+	setupEnvTest()
+	os.Setenv("BOOL", "true")
+
+	v, err := Bool("bool")
+
 	assert.Nil(t, err)
 	assert.True(t, v)
 }
 
 func TestEnvFloat(t *testing.T) {
-	os.Setenv("FLOATENV", "12.13")
-	v, err := Float("floatenv")
+	setupEnvTest()
+	os.Setenv("FLOAT", "12.13")
+
+	v, err := Float("float")
+
 	assert.Nil(t, err)
 	assert.Equal(t, 12.13, v)
 }
 
 func TestEnvInt(t *testing.T) {
-	os.Setenv("INTENV", "12")
-	v, err := Int("intenv")
+	setupEnvTest()
+	os.Setenv("INT", "12")
+
+	v, err := Int("int")
+
 	assert.Nil(t, err)
 	assert.Equal(t, 12, v)
 }
 
 func TestEnvString(t *testing.T) {
-	os.Setenv("NAMEENV", "fredrik")
+	setupEnvTest()
+	os.Setenv("NAME", "fredrik")
 
-	v, err := String("nameenv")
+	v, err := String("name")
+
 	assert.Nil(t, err)
 	assert.Equal(t, "fredrik", v)
 }
 
 func TestEnvList(t *testing.T) {
-	os.Setenv("NAMESENV", "fredrik, elli")
-	v, err := List("namesenv")
+	setupEnvTest()
+	os.Setenv("NAMES", "fredrik, elli")
+
+	v, err := List("NAMES")
+
 	assert.Nil(t, err)
 	assert.Equal(t, []string{"fredrik", "elli"}, v)
 }
 
 func TestEnvUint(t *testing.T) {
-	os.Setenv("UINTENV", "1")
+	setupEnvTest()
+	os.Setenv("UINT", "1")
+
 	v, err := Uint("uint")
+
 	assert.Nil(t, err)
 	assert.True(t, 1 == v)
 }
 
 func TestEnvStringDot(t *testing.T) {
+	setupEnvTest()
 	os.Setenv("NAME_ENV", "fredrik")
 
 	v, err := String("name.env")
+
 	assert.Nil(t, err)
 	assert.Equal(t, "fredrik", v)
 }

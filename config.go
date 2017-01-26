@@ -52,6 +52,13 @@ func Use(middleware ...Middleware) {
 	config.Lock()
 	defer config.Unlock()
 
+	// Remove unwanted middlewares.
+	for i, m := range middleware {
+		if m == nil {
+			middleware = append(middleware[:i], middleware[i+1:]...)
+		}
+	}
+
 	// Replace old middleware with a new one if the has the same id.
 	for i1, m1 := range config.middlewares {
 		for i2, m2 := range middleware {
@@ -65,11 +72,7 @@ func Use(middleware ...Middleware) {
 	config.middlewares = append(config.middlewares, middleware...)
 
 	// Stop program if a middleware failes to setup.
-	for i, middleware := range config.middlewares {
-		if middleware == nil {
-			config.middlewares = append(config.middlewares[:i], config.middlewares[i+1:]...)
-		}
-
+	for _, middleware := range config.middlewares {
 		err := middleware.Setup()
 
 		if err != nil {
