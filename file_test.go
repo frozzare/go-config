@@ -1,7 +1,9 @@
 package config
 
 import (
+	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/frozzare/go-assert"
 )
@@ -73,4 +75,27 @@ func TestFileUint(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, 1 == v)
+}
+
+func TestWatchFile(t *testing.T) {
+	Reset()
+
+	err := exec.Command("cp", "data/config.json", "/tmp/config-watch.json").Run()
+	assert.Nil(t, err)
+
+	Use(NewFromFile("/tmp/config-watch.json"))
+
+	v, err := String("name")
+	assert.Nil(t, err)
+	assert.Equal(t, "fredrik", v)
+
+	WatchFile("/tmp/config-watch.json")
+	err = exec.Command("cp", "data/config2.json", "/tmp/config-watch.json").Run()
+	assert.Nil(t, err)
+
+	time.Sleep(1e9)
+
+	v, err = String("name")
+	assert.Nil(t, err)
+	assert.Equal(t, "go", v)
 }
