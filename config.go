@@ -47,6 +47,11 @@ func (c *Config) Middlewares() []Middleware {
 	return c.middlewares
 }
 
+// Reset will reset the config instance.
+func Reset() {
+	config = Config{}
+}
+
 // Use adds a middleware to the stack list.
 func Use(middleware ...Middleware) {
 	config.Lock()
@@ -168,6 +173,10 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	if value == nil {
+		return nil, fmt.Errorf("Value not found for %s", key)
 	}
 
 	config.Set(key, value)

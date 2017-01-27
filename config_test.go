@@ -12,6 +12,20 @@ func TestData(t *testing.T) {
 	assert.Equal(t, "world", config.Get("hello").(string))
 }
 
+func TestReset(t *testing.T) {
+	config.Set("hello", "world")
+
+	v, err := String("hello")
+	assert.Nil(t, err)
+	assert.Equal(t, "world", v)
+
+	Reset()
+
+	v, err = String("hello")
+	assert.NotNil(t, err)
+	assert.Equal(t, "", v)
+}
+
 func TestUse(t *testing.T) {
 	Use(nil)
 	assert.Equal(t, 0, len(config.Middlewares()))
