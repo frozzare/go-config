@@ -9,7 +9,6 @@ Go package for dealing with configuration files, has built in support for enviro
 ```
 $ go get github.com/frozzare/go-config
 ```
-
 ## Example
 
 ```go
