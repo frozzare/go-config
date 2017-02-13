@@ -1,4 +1,4 @@
-# Fly [![Build Status](https://travis-ci.org/frozzare/go-config.svg?branch=master)](https://travis-ci.org/frozzare/go-config) [![GoDoc](https://godoc.org/github.com/frozzare/go-config?status.svg)](https://godoc.org/github.com/frozzare/go-config)
+# Config [![Build Status](https://travis-ci.org/frozzare/go-config.svg?branch=master)](https://travis-ci.org/frozzare/go-config) [![GoDoc](https://godoc.org/github.com/frozzare/go-config?status.svg)](https://godoc.org/github.com/frozzare/go-config)
 
 > WIP
 
