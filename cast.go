@@ -60,7 +60,7 @@ func castInt(v interface{}) (int, error) {
 		return int(f), nil
 	}
 
-	if f, ok := v.(int); ok {
+	if f, ok := v.(int64); ok {
 		return int(f), nil
 	}
 
@@ -117,7 +117,7 @@ func castUint(v interface{}) (uint, error) {
 		return uint(f), nil
 	}
 
-	if f, ok := v.(int); ok {
+	if f, ok := v.(int64); ok {
 		return uint(f), nil
 	}
 
