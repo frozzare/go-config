@@ -2,7 +2,7 @@
 
 > WIP
 
-Go package for dealing with configuration files, has built in support for environment variables and JSON files and support for YAML via plugin.
+Go package for dealing with configuration files, has built in support for environment variables and JSON files and support for YAML and Toml via plugin.
 
 ## Installation
 
