@@ -1,8 +1,12 @@
 hash: 923c0df6b55aa73456d5234b44211572309f6cddc1d2be45a3f7c9b91072e5f7
-updated: 2017-02-13T13:25:46.103668857+01:00
+updated: 2017-02-14T10:15:46.757107536+01:00
 imports:
 - name: github.com/fsnotify/fsnotify
   version: 629574ca2a5df945712d3079857300b5e4da0236
+- name: github.com/pelletier/go-buffruneio
+  version: df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d
+- name: github.com/pelletier/go-toml
+  version: c9506ee96398e7571356462217b9e24d6a628d71
 - name: golang.org/x/sys
   version: d75a52659825e75fff6158388dddc6a5b04f9ba5
   subpackages:
