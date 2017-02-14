@@ -1,0 +1,21 @@
+bool = true
+float = 12.13
+int = 12
+name = "fredrik"
+names = ["fredrik", "elli"]
+uint = 1
+
+[object]
+name = "fredrik"
+
+[user]
+name = "frozzare"
+
+[user.info]
+name = "fredrik"
+
+[user.info.level]
+name = "elli"
+
+[user.info.level.level2]
+name = "frozzare"
