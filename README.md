@@ -1,7 +1,5 @@
 # Config [![Build Status](https://travis-ci.org/frozzare/go-config.svg?branch=master)](https://travis-ci.org/frozzare/go-config) [![GoDoc](https://godoc.org/github.com/frozzare/go-config?status.svg)](https://godoc.org/github.com/frozzare/go-config)
 
-> WIP
-
 Go package for dealing with configuration files, has built in support for environment variables and JSON files and support for YAML and Toml via plugin.
 
 ## Installation
