@@ -1,8 +1,10 @@
 hash: 923c0df6b55aa73456d5234b44211572309f6cddc1d2be45a3f7c9b91072e5f7
-updated: 2017-02-25T13:13:23.244044471+01:00
+updated: 2017-02-25T18:21:14.239673327+01:00
 imports:
 - name: github.com/fsnotify/fsnotify
   version: 629574ca2a5df945712d3079857300b5e4da0236
+- name: github.com/goraz/cast
+  version: a1918f6ea079f56d6a8c87d07ec8a950c2fbeafa
 - name: github.com/pelletier/go-buffruneio
   version: df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d
 - name: github.com/pelletier/go-toml
