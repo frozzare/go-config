@@ -9,6 +9,8 @@ import (
 )
 
 func setupFileTest() {
+	Reset()
+
 	Use(NewFromBytes("json", []byte(`
         {
             "bytes": {
@@ -74,7 +76,7 @@ func TestFileUint(t *testing.T) {
 	v, err := Uint("bytes.uint")
 
 	assert.Nil(t, err)
-	assert.True(t, 1 == v)
+	assert.Equal(t, uint64(1), v)
 }
 
 func TestWatchFile(t *testing.T) {
@@ -93,7 +95,7 @@ func TestWatchFile(t *testing.T) {
 	err = exec.Command("cp", "data/config2.json", "/tmp/config-watch.json").Run()
 	assert.Nil(t, err)
 
-	time.Sleep(1e9)
+	time.Sleep(30)
 
 	v, err = String("name")
 	assert.Nil(t, err)

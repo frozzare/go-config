@@ -1,18 +1,18 @@
 hash: 923c0df6b55aa73456d5234b44211572309f6cddc1d2be45a3f7c9b91072e5f7
-updated: 2017-02-14T10:15:46.757107536+01:00
+updated: 2017-02-25T13:13:23.244044471+01:00
 imports:
 - name: github.com/fsnotify/fsnotify
   version: 629574ca2a5df945712d3079857300b5e4da0236
 - name: github.com/pelletier/go-buffruneio
   version: df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d
 - name: github.com/pelletier/go-toml
-  version: c9506ee96398e7571356462217b9e24d6a628d71
+  version: 22139eb5469018e7374b3e7ef653de37ffb44f72
 - name: golang.org/x/sys
-  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  version: e4594059fe4cde2daf423055a596c2cd1e6c9adf
   subpackages:
   - unix
 - name: gopkg.in/yaml.v2
   version: bef53efd0c76e49e6de55ead051f886bea7e9420
 testImports:
 - name: github.com/frozzare/go-assert
-  version: c0d9de0601e916f0692ed31a92e7738376d7aed7
+  version: 6f04caa18e10470209b248c4a29c400a4a52bd5d

@@ -1,5 +1,7 @@
 package config
 
+import "github.com/goraz/cast"
+
 // Values middleware struct that handles predefined values.
 type Values struct {
 	values map[string]interface{}
@@ -23,7 +25,7 @@ func (s *Values) Bool(key string) (bool, error) {
 		return false, err
 	}
 
-	return castBool(v)
+	return cast.Bool(v)
 }
 
 // Float returns a float64 or a error.
@@ -34,18 +36,18 @@ func (s *Values) Float(key string) (float64, error) {
 		return 0.0, err
 	}
 
-	return castFloat(v)
+	return cast.Float(v)
 }
 
 // Int returns a int or a error.
-func (s *Values) Int(key string) (int, error) {
+func (s *Values) Int(key string) (int64, error) {
 	v, err := value(key, s.values)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return castInt(v)
+	return cast.Int(v)
 }
 
 // Get returns a interface or a error.
@@ -78,18 +80,18 @@ func (s *Values) String(key string) (string, error) {
 		return "", err
 	}
 
-	return castString(v)
+	return cast.String(v)
 }
 
 // Uint returns a unsigned int or a error.
-func (s *Values) Uint(key string) (uint, error) {
+func (s *Values) Uint(key string) (uint64, error) {
 	v, err := value(key, s.values)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return castUint(v)
+	return cast.Uint(v)
 }
 
 // ID returns the values struct identifier.

@@ -1,12 +1,18 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"sync"
 )
 
-var config Config
+var (
+	config Config
+
+	// ErrNoValueFound it's the error when no value is found.
+	ErrNoValueFound = errors.New("Value not found given key")
+)
 
 // Config is the struct for the config.
 type Config struct {
@@ -175,7 +181,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 	}
 
 	if value == nil {
-		return nil, fmt.Errorf("Value not found for %s", key)
+		return nil, ErrNoValueFound
 	}
 
 	config.Set(key, value)

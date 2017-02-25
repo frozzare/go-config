@@ -1,9 +1,10 @@
 package config
 
 import (
-	"errors"
 	"os"
 	"strings"
+
+	"github.com/goraz/cast"
 )
 
 // Env middleware struct that handles environment variables.
@@ -20,57 +21,52 @@ func NewEnv() *Env {
 	return &Env{}
 }
 
-func (s *Env) value(name string) (string, error) {
+func (s *Env) value(name string) string {
 	name = strings.ToUpper(name)
 	name = strings.Replace(name, ".", "_", -1)
 
-	v := os.Getenv(name)
-	if v == "" {
-		return v, errors.New("Value does not exist")
-	}
-
-	return v, nil
+	return os.Getenv(name)
 }
 
 // Bool returns a bool or a error.
 func (s *Env) Bool(key string) (bool, error) {
-	v, err := s.value(key)
+	v := s.value(key)
 
-	if err != nil {
-		return false, err
+	if v == "" {
+		return false, nil
 	}
 
-	return castBool(v)
+	return cast.Bool(v)
 }
 
 // Float returns a float64 or a error.
 func (s *Env) Float(key string) (float64, error) {
-	v, err := s.value(key)
+	v := s.value(key)
 
-	if err != nil {
-		return 0.0, err
+	if v == "" {
+		return 0.0, nil
 	}
 
-	return castFloat(v)
+	return cast.Float(v)
 }
 
 // Int returns a int or a error.
-func (s *Env) Int(key string) (int, error) {
-	v, err := s.value(key)
+func (s *Env) Int(key string) (int64, error) {
+	v := s.value(key)
 
-	if err != nil {
-		return 0, err
+	if v == "" {
+		return 0, nil
 	}
 
-	return castInt(v)
+	return cast.Int(v)
 }
 
 // Get returns a interface or a error.
 func (s *Env) Get(key string) (interface{}, error) {
-	v, err := s.value(key)
+	v := s.value(key)
 
-	if err != nil {
-		return nil, err
+	if v == "" {
+		return nil, nil
 	}
 
 	return v, nil
@@ -78,10 +74,10 @@ func (s *Env) Get(key string) (interface{}, error) {
 
 // List returns a slice of strings or a error.
 func (s *Env) List(key string) ([]string, error) {
-	v, err := s.value(key)
+	v := s.value(key)
 
-	if err != nil {
-		return []string{}, err
+	if v == "" {
+		return []string{}, nil
 	}
 
 	return castList(v)
@@ -89,24 +85,24 @@ func (s *Env) List(key string) ([]string, error) {
 
 // String returns a string or a error.
 func (s *Env) String(key string) (string, error) {
-	v, err := s.value(key)
+	v := s.value(key)
 
-	if err != nil {
-		return "", err
+	if v == "" {
+		return "", nil
 	}
 
-	return castString(v)
+	return cast.String(v)
 }
 
 // Uint returns a unsigned int or a error.
-func (s *Env) Uint(key string) (uint, error) {
-	v, err := s.value(key)
+func (s *Env) Uint(key string) (uint64, error) {
+	v := s.value(key)
 
-	if err != nil {
-		return 0, err
+	if v == "" {
+		return 0, nil
 	}
 
-	return castUint(v)
+	return cast.Uint(v)
 }
 
 // ID returns the values struct identifier.

@@ -7,6 +7,8 @@ import (
 )
 
 func setupValuesTest() {
+	Reset()
+
 	Use(NewFromValues(map[string]interface{}{
 		"bool":  true,
 		"float": 12.13,
@@ -66,7 +68,7 @@ func TestValuesUint(t *testing.T) {
 	v, err := Uint("uint")
 
 	assert.Nil(t, err)
-	assert.True(t, 1 == v)
+	assert.Equal(t, uint64(1), v)
 }
 
 func TestValuesStringDot(t *testing.T) {
