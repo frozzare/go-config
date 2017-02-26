@@ -1,6 +1,6 @@
 # Config [![Build Status](https://travis-ci.org/frozzare/go-config.svg?branch=master)](https://travis-ci.org/frozzare/go-config) [![GoDoc](https://godoc.org/github.com/frozzare/go-config?status.svg)](https://godoc.org/github.com/frozzare/go-config) [![Go Report Card](https://goreportcard.com/badge/github.com/frozzare/go-config)](https://goreportcard.com/report/github.com/frozzare/go-config)
 
-Go package for dealing with configuration files, has built in support for environment variables and JSON files and support for YAML and Toml via plugin.
+Go package for dealing with configuration files, has built in support for environment variables and JSON files and support for YAML and Toml via plugins.
 
 ## Installation
 
