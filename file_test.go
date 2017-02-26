@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"os/exec"
 	"testing"
 	"time"
@@ -85,13 +86,12 @@ func TestWatchFile(t *testing.T) {
 	err := exec.Command("cp", "data/config.json", "/tmp/config-watch.json").Run()
 	assert.Nil(t, err)
 
-	Use(NewFromFile("/tmp/config-watch.json"))
+	Use(NewFromFile("/tmp/config-watch.json", true))
 
 	v, err := String("name")
 	assert.Nil(t, err)
 	assert.Equal(t, "fredrik", v)
 
-	WatchFile("/tmp/config-watch.json")
 	err = exec.Command("cp", "data/config2.json", "/tmp/config-watch.json").Run()
 	assert.Nil(t, err)
 
@@ -100,4 +100,31 @@ func TestWatchFile(t *testing.T) {
 	v, err = String("name")
 	assert.Nil(t, err)
 	assert.Equal(t, "go", v)
+
+	os.Remove("/tmp/config-watch.json")
+}
+
+func TestWatchFile2(t *testing.T) {
+	Reset()
+
+	err := exec.Command("cp", "data/config.json", "/tmp/config-watch2.json").Run()
+	assert.Nil(t, err)
+
+	Use(NewFromFile("/tmp/config-watch2.json"))
+
+	v, err := String("name")
+	assert.Nil(t, err)
+	assert.Equal(t, "fredrik", v)
+
+	WatchFile("/tmp/config-watch2.json")
+	err = exec.Command("cp", "data/config2.json", "/tmp/config-watch2.json").Run()
+	assert.Nil(t, err)
+
+	time.Sleep(30)
+
+	v, err = String("name")
+	assert.Nil(t, err)
+	assert.Equal(t, "go", v)
+
+	os.Remove("/tmp/config-watch2.json")
 }
