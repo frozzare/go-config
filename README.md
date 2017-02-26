@@ -23,12 +23,9 @@ import (
 )
 
 func main() {
-	// Use file + env as middlewares.
-	config.Use(config.NewFromFile("config.yml"))
+	// Use file and watch file + env as middlewares.
+	config.Use(config.NewFromFile("config.yml", true))
 	config.Use(config.NewEnv())
-
-	// Watch config (replaces first middleware since it's the same file path).
-	config.WatchFile("config.yml")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		v, _ := config.String("name")

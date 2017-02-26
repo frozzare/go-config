@@ -48,8 +48,8 @@ func fileCallbackFromPath(path string) fileCallback {
 	return nil
 }
 
-// NewFromFile creates a new middleware from file.
-func NewFromFile(path string) Middleware {
+// NewFromFile creates a new middleware from file. Optional bool argument to watch file.
+func NewFromFile(path string, watch ...bool) Middleware {
 	file := &File{
 		callback: fileCallbackFromPath(path),
 		gen: func() (io.Reader, error) {
@@ -61,6 +61,10 @@ func NewFromFile(path string) Middleware {
 	err := file.Setup()
 	if err != nil {
 		return nil
+	}
+
+	if len(watch) > 0 && watch[0] {
+		WatchFile(path)
 	}
 
 	return file
