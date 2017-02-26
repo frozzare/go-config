@@ -23,7 +23,7 @@ import (
 )
 
 func main() {
-	// Use file and watch file + env as middlewares.
+	// Use read and watch file + env as middlewares.
 	config.Use(config.NewFromFile("config.yml", true))
 	config.Use(config.NewEnv())
 
