@@ -95,7 +95,7 @@ func TestWatchFile(t *testing.T) {
 	err = exec.Command("cp", "data/config2.json", "/tmp/config-watch.json").Run()
 	assert.Nil(t, err)
 
-	time.Sleep(30)
+	time.Sleep(60)
 
 	v, err = String("name")
 	assert.Nil(t, err)
