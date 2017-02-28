@@ -1,6 +1,6 @@
-# Config [![Build Status](https://travis-ci.org/frozzare/go-config.svg?branch=master)](https://travis-ci.org/frozzare/go-config) [![GoDoc](https://godoc.org/github.com/frozzare/go-config?status.svg)](https://godoc.org/github.com/frozzare/go-config)
+# Config [![Build Status](https://travis-ci.org/frozzare/go-config.svg?branch=master)](https://travis-ci.org/frozzare/go-config) [![GoDoc](https://godoc.org/github.com/frozzare/go-config?status.svg)](https://godoc.org/github.com/frozzare/go-config) [![Go Report Card](https://goreportcard.com/badge/github.com/frozzare/go-config)](https://goreportcard.com/report/github.com/frozzare/go-config)
 
-Go package for dealing with configuration files, has built in support for environment variables and JSON files and support for YAML and Toml via plugin.
+Go package for dealing with configuration files, has built in support for environment variables and JSON files and support for YAML and Toml via plugins.
 
 ## Installation
 
@@ -23,12 +23,9 @@ import (
 )
 
 func main() {
-	// Use file + env as middlewares.
-	config.Use(config.NewFromFile("config.yml"))
+	// Use read and watch file + env as middlewares.
+	config.Use(config.NewFromFile("config.yml", true))
 	config.Use(config.NewEnv())
-
-	// Watch config (replaces first middleware since it's the same file path).
-	config.WatchFile("config.yml")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		v, _ := config.String("name")

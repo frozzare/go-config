@@ -18,4 +18,4 @@ install:
   - glide install
 
 script:
- - go test $(go list ./... | grep -v /vendor/)
+ - go test -race $(go list ./... | grep -v /vendor/)

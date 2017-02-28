@@ -24,67 +24,103 @@ func Get(name string) (interface{}, error) {
 }
 
 // Bool returns a bool from the config file.
-func Bool(name string) (bool, error) {
+func Bool(name string, def ...interface{}) (bool, error) {
 	v, err := config.value(name, boolType)
 
 	if err != nil {
-		return false, err
+		value := defaultValue(false, def...).(bool)
+
+		if err == ErrNoValueFound && value != false {
+			return value, nil
+		}
+
+		return value, err
 	}
 
-	return v.(bool), nil
+	return defaultValue(v, def...).(bool), nil
 }
 
 // Float returns a float64 from the config file.
-func Float(name string) (float64, error) {
+func Float(name string, def ...interface{}) (float64, error) {
 	v, err := config.value(name, floatType)
 
 	if err != nil {
-		return 0.0, err
+		value := defaultValue(0.0, def...).(float64)
+
+		if err == ErrNoValueFound && value != 0.0 {
+			return value, nil
+		}
+
+		return value, err
 	}
 
-	return v.(float64), nil
+	return defaultValue(v, def...).(float64), nil
 }
 
 // Int returns a integer from the config file.
-func Int(name string) (int, error) {
+func Int(name string, def ...interface{}) (int64, error) {
 	v, err := config.value(name, intType)
 
 	if err != nil {
-		return 0, err
+		value := defaultValue(0, def...).(int64)
+
+		if err == ErrNoValueFound && value != 0 {
+			return value, nil
+		}
+
+		return value, err
 	}
 
-	return v.(int), nil
+	return defaultValue(v, def...).(int64), nil
 }
 
 // List returns a slice of strings from the config file.
-func List(name string) ([]string, error) {
+func List(name string, def ...interface{}) ([]string, error) {
 	v, err := config.value(name, listType)
 
 	if err != nil {
-		return []string{}, err
+		value := defaultValue([]string{}, def...).([]string)
+
+		if err == ErrNoValueFound && len(value) > 0 {
+			return value, nil
+		}
+
+		return value, err
 	}
 
-	return v.([]string), nil
+	return defaultValue(v, def...).([]string), nil
 }
 
 // String returns a string from the config file.
-func String(name string) (string, error) {
+func String(name string, def ...interface{}) (string, error) {
 	v, err := config.value(name, stringType)
 
 	if err != nil {
-		return "", err
+		value := defaultValue("", def...).(string)
+
+		if err == ErrNoValueFound && value != "" {
+			return value, nil
+		}
+
+		return value, err
 	}
 
-	return v.(string), nil
+	return defaultValue(v, def...).(string), nil
 }
 
 // Uint returns a unsigned int from the config file.
-func Uint(name string) (uint, error) {
+func Uint(name string, def ...interface{}) (uint64, error) {
 	v, err := config.value(name, uintType)
 
 	if err != nil {
-		return 0, err
+		value := defaultValue(uint64(0), def...).(uint64)
+
+		if err == ErrNoValueFound && value != uint64(0) {
+			return value, nil
+		}
+
+		return value, err
 	}
 
-	return v.(uint), nil
+	return defaultValue(v, def...).(uint64), nil
 }

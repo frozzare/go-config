@@ -12,6 +12,7 @@ import (
 	"bytes"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/goraz/cast"
 )
 
 // File struct is a config file.
@@ -47,8 +48,8 @@ func fileCallbackFromPath(path string) fileCallback {
 	return nil
 }
 
-// NewFromFile creates a new middleware from file.
-func NewFromFile(path string) Middleware {
+// NewFromFile creates a new middleware from file. Optional bool argument to watch file.
+func NewFromFile(path string, watch ...bool) Middleware {
 	file := &File{
 		callback: fileCallbackFromPath(path),
 		gen: func() (io.Reader, error) {
@@ -60,6 +61,10 @@ func NewFromFile(path string) Middleware {
 	err := file.Setup()
 	if err != nil {
 		return nil
+	}
+
+	if len(watch) > 0 && watch[0] {
+		WatchFile(path)
 	}
 
 	return file
@@ -166,7 +171,7 @@ func (s *File) Bool(key string) (bool, error) {
 		return false, err
 	}
 
-	return castBool(v)
+	return cast.Bool(v)
 }
 
 // Float returns a float64 or a error.
@@ -177,18 +182,18 @@ func (s *File) Float(key string) (float64, error) {
 		return 0.0, err
 	}
 
-	return castFloat(v)
+	return cast.Float(v)
 }
 
 // Int returns a int or a error.
-func (s *File) Int(key string) (int, error) {
+func (s *File) Int(key string) (int64, error) {
 	v, err := value(key, s.values)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return castInt(v)
+	return cast.Int(v)
 }
 
 // Get returns a interface or a error.
@@ -221,18 +226,18 @@ func (s *File) String(key string) (string, error) {
 		return "", err
 	}
 
-	return castString(v)
+	return cast.String(v)
 }
 
 // Uint returns a unsigned int or a error.
-func (s *File) Uint(key string) (uint, error) {
+func (s *File) Uint(key string) (uint64, error) {
 	v, err := value(key, s.values)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return castUint(v)
+	return cast.Uint(v)
 }
 
 // ID returns the values struct identifier.
