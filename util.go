@@ -8,6 +8,21 @@ import (
 	"strings"
 )
 
+func convert(input interface{}) interface{} {
+	if _, ok := input.(map[interface{}]interface{}); !ok {
+		return input
+	}
+
+	v2 := make(map[string]interface{})
+
+	for key, value := range input.(map[interface{}]interface{}) {
+		k := toString(key)
+		v2[k] = value
+	}
+
+	return v2
+}
+
 func value(name string, values interface{}) (interface{}, error) {
 	if values == nil {
 		return nil, errors.New("Value does not exists")
@@ -23,7 +38,7 @@ func value(name string, values interface{}) (interface{}, error) {
 				continue
 			}
 
-			v, err := value(parts[i+1], values.(map[string]interface{})[part])
+			v, err := value(parts[i+1], convert(values).(map[string]interface{})[part])
 
 			if err != nil {
 				continue
@@ -37,11 +52,11 @@ func value(name string, values interface{}) (interface{}, error) {
 		}
 	}
 
-	if _, ok := values.(map[string]interface{}); !ok {
+	if _, ok := convert(values).(map[string]interface{}); !ok {
 		return values, nil
 	}
 
-	val, ok := values.(map[string]interface{})[name]
+	val, ok := convert(values).(map[string]interface{})[name]
 
 	if !ok {
 		return nil, errors.New("Value does not exists")
