@@ -20,6 +20,18 @@ func TestTypeBool(t *testing.T) {
 	assert.True(t, v)
 }
 
+func TestTypeMustBool(t *testing.T) {
+	Reset()
+
+	v := MustBool("bool", false)
+	assert.False(t, v)
+
+	config.Set("bool", true)
+
+	v = MustBool("bool")
+	assert.True(t, v)
+}
+
 func TestTypeFloat(t *testing.T) {
 	Reset()
 
@@ -31,6 +43,18 @@ func TestTypeFloat(t *testing.T) {
 
 	v, err = Float("float")
 	assert.Nil(t, err)
+	assert.Equal(t, 12.13, v)
+}
+
+func TestTypeMustFloat(t *testing.T) {
+	Reset()
+
+	v := MustFloat("float", 12.00)
+	assert.Equal(t, 12.00, v)
+
+	config.Set("float", 12.13)
+
+	v = MustFloat("float")
 	assert.Equal(t, 12.13, v)
 }
 
@@ -46,6 +70,18 @@ func TestTypeInt(t *testing.T) {
 	v, err = Int("int")
 	assert.Nil(t, err)
 	assert.Equal(t, 1, v)
+}
+
+func TestTypeMustInt(t *testing.T) {
+	Reset()
+
+	v := MustInt("int", 12)
+	assert.Equal(t, 12, v)
+
+	config.Set("int", 13)
+
+	v = MustInt("int")
+	assert.Equal(t, 13, v)
 }
 
 func TestTypeGet(t *testing.T) {
@@ -77,6 +113,18 @@ func TestTypeString(t *testing.T) {
 	assert.Equal(t, "fredrik", v)
 }
 
+func TestTypeMustString(t *testing.T) {
+	Reset()
+
+	v := MustString("name", "test")
+	assert.Equal(t, "test", v)
+
+	config.Set("name", "fredrik")
+
+	v = MustString("name")
+	assert.Equal(t, "fredrik", v)
+}
+
 func TestTypeList(t *testing.T) {
 	Reset()
 
@@ -91,6 +139,18 @@ func TestTypeList(t *testing.T) {
 	assert.Equal(t, []string{"fredrik", "elli"}, v)
 }
 
+func TestTypeMustList(t *testing.T) {
+	Reset()
+
+	v := MustList("names", []string{})
+	assert.Equal(t, []string{}, v)
+
+	config.Set("names", []string{"fredrik", "elli"})
+
+	v = MustList("names")
+	assert.Equal(t, []string{"fredrik", "elli"}, v)
+}
+
 func TestTypeUint(t *testing.T) {
 	Reset()
 
@@ -102,5 +162,17 @@ func TestTypeUint(t *testing.T) {
 
 	v, err = Uint("uint")
 	assert.Nil(t, err)
+	assert.Equal(t, uint(1), v)
+}
+
+func TestTypeMustUint(t *testing.T) {
+	Reset()
+
+	v := MustUint("uint", 2)
+	assert.Equal(t, uint(2), v)
+
+	config.Set("uint", uint(1))
+
+	v = MustUint("uint")
 	assert.Equal(t, uint(1), v)
 }
