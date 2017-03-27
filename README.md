@@ -37,6 +37,6 @@ func main() {
 
 ```
 
-# License
+## License
 
 MIT © [Fredrik Forsmo](https://github.com/frozzare)
