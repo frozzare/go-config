@@ -11,7 +11,7 @@ var (
 	config Config
 
 	// ErrNoValueFound it's the error when no value is found.
-	ErrNoValueFound = errors.New("Value not found given key")
+	ErrNoValueFound = errors.New("Value not found for the given key")
 )
 
 // Config is the struct for the config.
@@ -109,7 +109,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 		case boolType:
 			o, err := middleware.Bool(key)
 
-			if err != nil {
+			if err != nil || o == false {
 				continue
 			}
 
@@ -118,7 +118,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 		case floatType:
 			o, err := middleware.Float(key)
 
-			if err != nil {
+			if err != nil || o == 0.0 {
 				continue
 			}
 
@@ -127,7 +127,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 		case intType:
 			o, err := middleware.Int(key)
 
-			if err != nil {
+			if err != nil || o == 0 {
 				continue
 			}
 
@@ -136,7 +136,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 		case interfaceType:
 			o, err := middleware.Get(key)
 
-			if err != nil {
+			if err != nil || o == nil {
 				continue
 			}
 
@@ -145,7 +145,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 		case listType:
 			o, err := middleware.List(key)
 
-			if err != nil {
+			if err != nil || len(o) == 0 {
 				continue
 			}
 
@@ -154,7 +154,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 		case stringType:
 			o, err := middleware.String(key)
 
-			if err != nil {
+			if err != nil || o == "" {
 				continue
 			}
 
@@ -163,7 +163,7 @@ func (c *Config) value(key string, typ valueType) (interface{}, error) {
 		case uintType:
 			o, err := middleware.Uint(key)
 
-			if err != nil {
+			if err != nil || o == uint64(0) {
 				continue
 			}
 
