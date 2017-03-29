@@ -5,7 +5,7 @@ Go package for dealing with configuration files, has built in support for enviro
 ## Installation
 
 ```
-$ go get github.com/frozzare/go-config
+go get github.com/frozzare/go-config
 ```
 
 ## Example
