@@ -15,8 +15,8 @@ const (
 )
 
 // Bool returns a bool from the config file.
-func Bool(name string, def ...interface{}) (bool, error) {
-	v, err := config.value(name, boolType)
+func Bool(key string, def ...interface{}) (bool, error) {
+	v, err := config.value(key, boolType)
 
 	if err != nil {
 		value := defaultValue(false, def...).(bool)
@@ -33,19 +33,19 @@ func Bool(name string, def ...interface{}) (bool, error) {
 
 // MustBool returns a bool from the config file,
 // it will panic if a error is created.
-func MustBool(name string, def ...interface{}) bool {
-	v, err := Bool(name, def...)
+func MustBool(key string, def ...interface{}) bool {
+	v, err := Bool(key, def...)
 
 	if err != nil {
-		panic(fmt.Errorf("%s: %s", err, name))
+		panic(fmt.Errorf("%s: %s", err, key))
 	}
 
 	return v
 }
 
 // Float returns a float64 from the config file.
-func Float(name string, def ...interface{}) (float64, error) {
-	v, err := config.value(name, floatType)
+func Float(key string, def ...interface{}) (float64, error) {
+	v, err := config.value(key, floatType)
 
 	if err != nil {
 		if err == ErrNoValueFound && len(def) > 0 {
@@ -60,19 +60,19 @@ func Float(name string, def ...interface{}) (float64, error) {
 
 // MustFloat returns a float64 from the config file,
 // it will panic if a error is created.
-func MustFloat(name string, def ...interface{}) float64 {
-	v, err := Float(name, def...)
+func MustFloat(key string, def ...interface{}) float64 {
+	v, err := Float(key, def...)
 
 	if err != nil {
-		panic(fmt.Errorf("%s: %s", err, name))
+		panic(fmt.Errorf("%s: %s", err, key))
 	}
 
 	return v
 }
 
 // Get returns the value for the given key from the config file as a interface.
-func Get(name string, def ...interface{}) (interface{}, error) {
-	v, err := config.value(name, interfaceType)
+func Get(key string, def ...interface{}) (interface{}, error) {
+	v, err := config.value(key, interfaceType)
 
 	if err != nil {
 		if err == ErrNoValueFound && len(def) > 0 {
@@ -87,19 +87,19 @@ func Get(name string, def ...interface{}) (interface{}, error) {
 
 // MustGet returns a interface from the config file,
 // it will panic if a error is created.
-func MustGet(name string, def ...interface{}) interface{} {
-	v, err := Get(name, def...)
+func MustGet(key string, def ...interface{}) interface{} {
+	v, err := Get(key, def...)
 
 	if err != nil {
-		panic(fmt.Errorf("%s: %s", err, name))
+		panic(fmt.Errorf("%s: %s", err, key))
 	}
 
 	return v
 }
 
 // Int returns a int64 from the config file.
-func Int(name string, def ...interface{}) (int64, error) {
-	v, err := config.value(name, intType)
+func Int(key string, def ...interface{}) (int64, error) {
+	v, err := config.value(key, intType)
 
 	if err != nil {
 		if err == ErrNoValueFound && len(def) > 0 {
@@ -114,19 +114,19 @@ func Int(name string, def ...interface{}) (int64, error) {
 
 // MustInt returns a int64 from the config file,
 // it will panic if a error is created.
-func MustInt(name string, def ...interface{}) int64 {
-	v, err := Int(name, def...)
+func MustInt(key string, def ...interface{}) int64 {
+	v, err := Int(key, def...)
 
 	if err != nil {
-		panic(fmt.Errorf("%s: %s", err, name))
+		panic(fmt.Errorf("%s: %s", err, key))
 	}
 
 	return v
 }
 
 // List returns a slice of strings from the config file.
-func List(name string, def ...interface{}) ([]string, error) {
-	v, err := config.value(name, listType)
+func List(key string, def ...interface{}) ([]string, error) {
+	v, err := config.value(key, listType)
 
 	if err != nil {
 		if err == ErrNoValueFound && len(def) > 0 {
@@ -141,19 +141,19 @@ func List(name string, def ...interface{}) ([]string, error) {
 
 // MustList returns a slice of strings from the config file,
 // it will panic if a error is created.
-func MustList(name string, def ...interface{}) []string {
-	v, err := List(name, def...)
+func MustList(key string, def ...interface{}) []string {
+	v, err := List(key, def...)
 
 	if err != nil {
-		panic(fmt.Errorf("%s: %s", err, name))
+		panic(fmt.Errorf("%s: %s", err, key))
 	}
 
 	return v
 }
 
 // String returns a string from the config file.
-func String(name string, def ...interface{}) (string, error) {
-	v, err := config.value(name, stringType)
+func String(key string, def ...interface{}) (string, error) {
+	v, err := config.value(key, stringType)
 
 	if err != nil {
 		if err == ErrNoValueFound && len(def) > 0 {
@@ -168,19 +168,19 @@ func String(name string, def ...interface{}) (string, error) {
 
 // MustString returns a string from the config file,
 // it will panic if a error is created.
-func MustString(name string, def ...interface{}) string {
-	v, err := String(name, def...)
+func MustString(key string, def ...interface{}) string {
+	v, err := String(key, def...)
 
 	if err != nil {
-		panic(fmt.Errorf("%s: %s", err, name))
+		panic(fmt.Errorf("%s: %s", err, key))
 	}
 
 	return v
 }
 
 // Uint returns a unsigned int64 from the config file.
-func Uint(name string, def ...interface{}) (uint64, error) {
-	v, err := config.value(name, uintType)
+func Uint(key string, def ...interface{}) (uint64, error) {
+	v, err := config.value(key, uintType)
 
 	if err != nil {
 		if err == ErrNoValueFound && len(def) > 0 {
@@ -195,11 +195,11 @@ func Uint(name string, def ...interface{}) (uint64, error) {
 
 // MustUint returns a unsigned int64 from the config file,
 // it will panic if a error is created.
-func MustUint(name string, def ...interface{}) uint64 {
-	v, err := Uint(name, def...)
+func MustUint(key string, def ...interface{}) uint64 {
+	v, err := Uint(key, def...)
 
 	if err != nil {
-		panic(fmt.Errorf("%s: %s", err, name))
+		panic(fmt.Errorf("%s: %s", err, key))
 	}
 
 	return v
