@@ -58,6 +58,33 @@ func TestTypeMustFloat(t *testing.T) {
 	assert.Equal(t, 12.13, v)
 }
 
+func TestTypeGet(t *testing.T) {
+	Reset()
+
+	v, err := Get("object")
+	assert.NotNil(t, err)
+	assert.Nil(t, v)
+
+	config.Set("object", map[string]interface{}{"name": "fredrik"})
+
+	v, err = Get("object")
+
+	assert.Nil(t, err)
+	assert.Equal(t, map[string]interface{}{"name": "fredrik"}, v.(map[string]interface{}))
+}
+
+func TestMustGet(t *testing.T) {
+	Reset()
+
+	v := MustGet("object", map[string]interface{}{"name": "fredrik"})
+	assert.Equal(t, map[string]interface{}{"name": "fredrik"}, v.(map[string]interface{}))
+
+	config.Set("object", map[string]interface{}{"name": "fredrik"})
+
+	v = MustGet("object")
+	assert.Equal(t, map[string]interface{}{"name": "fredrik"}, v.(map[string]interface{}))
+}
+
 func TestTypeInt(t *testing.T) {
 	Reset()
 
@@ -82,21 +109,6 @@ func TestTypeMustInt(t *testing.T) {
 
 	v = MustInt("int")
 	assert.Equal(t, 13, v)
-}
-
-func TestTypeGet(t *testing.T) {
-	Reset()
-
-	v, err := Get("object")
-	assert.NotNil(t, err)
-	assert.Nil(t, v)
-
-	config.Set("object", map[string]interface{}{"name": "fredrik"})
-
-	v, err = Get("object")
-
-	assert.Nil(t, err)
-	assert.Equal(t, map[string]interface{}{"name": "fredrik"}, v.(map[string]interface{}))
 }
 
 func TestTypeString(t *testing.T) {

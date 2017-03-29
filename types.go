@@ -1,5 +1,7 @@
 package config
 
+import "fmt"
+
 type valueType int
 
 const (
@@ -11,17 +13,6 @@ const (
 	stringType
 	uintType
 )
-
-// Get returns the value for the given key from the config file as a interface.
-func Get(name string) (interface{}, error) {
-	v, err := config.value(name, interfaceType)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return v, nil
-}
 
 // Bool returns a bool from the config file.
 func Bool(name string, def ...interface{}) (bool, error) {
@@ -46,7 +37,7 @@ func MustBool(name string, def ...interface{}) bool {
 	v, err := Bool(name, def...)
 
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %s", err, name))
 	}
 
 	return v
@@ -73,7 +64,34 @@ func MustFloat(name string, def ...interface{}) float64 {
 	v, err := Float(name, def...)
 
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %s", err, name))
+	}
+
+	return v
+}
+
+// Get returns the value for the given key from the config file as a interface.
+func Get(name string, def ...interface{}) (interface{}, error) {
+	v, err := config.value(name, interfaceType)
+
+	if err != nil {
+		if err == ErrNoValueFound && len(def) > 0 {
+			return defaultValue(nil, def...), nil
+		}
+
+		return nil, err
+	}
+
+	return v, nil
+}
+
+// MustGet returns a interface from the config file,
+// it will panic if a error is created.
+func MustGet(name string, def ...interface{}) interface{} {
+	v, err := Get(name, def...)
+
+	if err != nil {
+		panic(fmt.Errorf("%s: %s", err, name))
 	}
 
 	return v
@@ -100,7 +118,7 @@ func MustInt(name string, def ...interface{}) int64 {
 	v, err := Int(name, def...)
 
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %s", err, name))
 	}
 
 	return v
@@ -127,7 +145,7 @@ func MustList(name string, def ...interface{}) []string {
 	v, err := List(name, def...)
 
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %s", err, name))
 	}
 
 	return v
@@ -154,7 +172,7 @@ func MustString(name string, def ...interface{}) string {
 	v, err := String(name, def...)
 
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %s", err, name))
 	}
 
 	return v
@@ -181,7 +199,7 @@ func MustUint(name string, def ...interface{}) uint64 {
 	v, err := Uint(name, def...)
 
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("%s: %s", err, name))
 	}
 
 	return v

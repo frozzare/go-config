@@ -100,5 +100,9 @@ func defaultValue(value interface{}, def ...interface{}) interface{} {
 		return uint64(v)
 	}
 
+	if len(def) > 0 && def[0] != nil {
+		return def[0]
+	}
+
 	return value
 }
